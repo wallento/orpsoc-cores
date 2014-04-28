@@ -58,4 +58,4 @@ trace_to_screen = bool "Output trace to screen"
 name = github
 user = wallento
 repo = mor1kx
-version = multicore
+version = multicore-demo
