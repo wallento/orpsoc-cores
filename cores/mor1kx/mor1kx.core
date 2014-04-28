@@ -46,7 +46,9 @@ include_files =
  rtl/verilog/mor1kx-defines.v
  rtl/verilog/mor1kx-sprs.v
 
-tb_src_files = bench/verilog/mor1kx_monitor.v
+tb_src_files =
+ bench/verilog/mor1kx_monitor.v
+ bench/verilog/mor1kx_traceport_monitor.v
 
 [plusargs]
 trace_enable = bool "Enable trace"
@@ -54,6 +56,6 @@ trace_to_screen = bool "Output trace to screen"
 
 [provider]
 name = github
-user = openrisc
+user = wallento
 repo = mor1kx
-version = master
+version = multicore
