@@ -93,8 +93,8 @@ wire wb_rst = wb_rst_i;
        .SLAVES  (2),
        .S0_RANGE_WIDTH (9),
        .S0_RANGE_MATCH (9'h0),
-       .S1_RANGE_WIDTH (29),
-       .S1_RANGE_MATCH (29'hff800000))
+       .S1_RANGE_WIDTH (16),
+       .S1_RANGE_MATCH (16'h9000))
    u_bus (/*AUTOINST*/
           // Outputs
           .m_dat_o                      ({wbm_dat_i[3], wbm_dat_i[2], wbm_dat_i[1], wbm_dat_i[0]}), // Templated
