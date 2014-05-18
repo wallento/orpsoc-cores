@@ -18,6 +18,8 @@ VerilatorTbUtils::VerilatorTbUtils(uint32_t *mem)
 }
 
 VerilatorTbUtils::~VerilatorTbUtils() {
+    if (vcdDumping)
+      tfp->close();
 }
 
 bool VerilatorTbUtils::doCycle() {
