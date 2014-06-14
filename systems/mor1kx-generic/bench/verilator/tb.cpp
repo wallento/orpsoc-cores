@@ -96,10 +96,12 @@ int main(int argc, char **argv, char **env)
 
 		top->wb_clk_i = !top->wb_clk_i;
 
+		tbUtils->doJTAG(&top->tms_pad_i, &top->tdi_pad_i, &top->tck_pad_i, top->tdo_pad_o);
+
 		insn = top->v->mor1kx0->mor1kx_cpu->monitor_execute_insn;
 		ex_pc = top->v->mor1kx0->mor1kx_cpu->monitor_execute_pc;
 
-		if (insn == (0x15000000 | NOP_EXIT)) {
+		if (insn == (0x15000000 | NOP_EXIT) || insn == (0x15000000 | NOP_EXIT_SILENT)) {
 			printf("Success! Got NOP_EXIT. Exiting (%lu)\n",
 			       tbUtils->getTime());
 			done = true;

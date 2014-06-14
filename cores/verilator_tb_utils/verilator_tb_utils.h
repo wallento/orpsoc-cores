@@ -1,8 +1,10 @@
 #ifndef __VERILATOR_TB_UTILS_H__
 #define __VERILATOR_TB_UTILS_H__
 
+#include <stdint.h>
 #include <verilated.h>
 #include <verilated_vcd_c.h>
+#include "jtagServer.h"
 
 extern struct argp verilator_tb_utils_argp;
 
@@ -13,34 +15,38 @@ public:
 
   VerilatedVcdC* tfp;
 
+  VerilatorJtagServer* jtag;
+
   bool doCycle();
 
-  unsigned long getTime() { return t; }
+  bool doJTAG(uint8_t *tms, uint8_t *tdi, uint8_t *tck, uint8_t tdo);
 
-  unsigned long getTimeout() { return timeout; }
+  uint64_t getTime() { return t; }
+
+  uint64_t getTimeout() { return timeout; }
   bool getVcdDump() { return vcdDump; }
-  unsigned long getVcdDumpStart() { return vcdDumpStart; }
-  unsigned long getVcdDumpStop() { return vcdDumpStop; }
+  uint64_t getVcdDumpStart() { return vcdDumpStart; }
+  uint64_t getVcdDumpStop() { return vcdDumpStop; }
   char *getVcdFileName() { return vcdFileName; }
 
-  bool getRspServerEnable() { return rspServerEnable; }
-  int getRspServerPort() { return rspServerPort; }
+  bool getJtagEnable() { return jtagEnable; }
+  int getJtagPort() { return jtagPort; }
 
   static int parseOpts(int key, char *arg, struct argp_state *state);
 
 private:
-  unsigned long t;
+  uint64_t t;
 
-  unsigned long timeout;
+  uint64_t timeout;
 
   bool vcdDump;
-  unsigned long vcdDumpStart;
-  unsigned long vcdDumpStop;
+  uint64_t vcdDumpStart;
+  uint64_t vcdDumpStop;
   char *vcdFileName;
   bool vcdDumping;
 
-  bool rspServerEnable;
-  int rspServerPort;
+  bool jtagEnable;
+  int jtagPort;
 
   uint32_t *mem;
 
