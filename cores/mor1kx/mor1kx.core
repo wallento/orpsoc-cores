@@ -56,6 +56,6 @@ trace_to_screen = bool "Output trace to screen"
 
 [provider]
 name = github
-user = wallento
+user = openrisc
 repo = mor1kx
-version = multicore-demo
+version = multicore
