@@ -33,7 +33,6 @@ src_files =
  rtl/verilog/mor1kx_pic.v
  rtl/verilog/mor1kx_rf_cappuccino.v
  rtl/verilog/mor1kx_rf_espresso.v
- rtl/verilog/mor1kx_rf_ram.v
  rtl/verilog/mor1kx_simple_dpram_sclk.v
  rtl/verilog/mor1kx_store_buffer.v
  rtl/verilog/mor1kx_ticktimer.v
@@ -45,6 +44,7 @@ src_files =
 include_files =
  rtl/verilog/mor1kx-defines.v
  rtl/verilog/mor1kx-sprs.v
+ rtl/verilog/mor1kx_utils.vh
 
 tb_src_files =
  bench/verilog/mor1kx_monitor.v
@@ -56,6 +56,6 @@ trace_to_screen = bool "Output trace to screen"
 
 [provider]
 name = github
-user = wallento
+user = openrisc
 repo = mor1kx
-version = multicore-demo
+version = master

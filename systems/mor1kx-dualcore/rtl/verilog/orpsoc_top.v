@@ -158,6 +158,7 @@ wire wb_rst = wb_rst_i;
        .OPTION_DCACHE_SET_WIDTH        (8),
        .OPTION_DCACHE_WAYS             (8),
        .OPTION_DCACHE_LIMIT_WIDTH      (31),
+       .OPTION_DCACHE_SNOOP            ("ENABLED"),
        .FEATURE_DMMU                   ("ENABLED"),
        .OPTION_PIC_TRIGGER             ("LATCHED_LEVEL"),
        
@@ -238,6 +239,7 @@ wire wb_rst = wb_rst_i;
        .OPTION_DCACHE_SET_WIDTH        (8),
        .OPTION_DCACHE_WAYS             (8),
        .OPTION_DCACHE_LIMIT_WIDTH      (31),
+       .OPTION_DCACHE_SNOOP            ("ENABLED"),
        .FEATURE_DMMU                   ("ENABLED"),
        .OPTION_PIC_TRIGGER             ("LATCHED_LEVEL"),
        
