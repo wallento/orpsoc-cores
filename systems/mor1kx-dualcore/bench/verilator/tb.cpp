@@ -75,14 +75,22 @@ public:
   VerilatorTbUtils* tbUtils;
   uint32_t *insn;
   uint32_t *pc;
+  uint8_t *valid;
+  uint32_t *wb_data;
+  uint8_t *wb_reg;
+  uint8_t *wb_en;
   Vorpsoc_top_mor1kx_cpu_cappuccino__pi5 *cpu;
   char printstring[256];
   int printstringpos;
+  unsigned int r3;
 
   TraceExecMonitor() : printstringpos(0), self_done(false) {}
 
   void eval() {
-    if (!self_done) {
+    if (!self_done && *valid) {
+      if (*wb_en && (*wb_reg == 3))
+	r3 = *wb_data;
+
       if (*insn == (0x15000000 | NOP_EXIT)) {
 	printf("[%lu] Success! Got NOP_EXIT (%lu)\n", id,
 	       tbUtils->getTime());
@@ -92,11 +100,11 @@ public:
 	       tbUtils->getTime());
 	done++; self_done = true;
       } else if (*insn == (0x15000000 | NOP_PUTC)) {
-	char c = cpu->get_gpr(3) & 0xff;
+	char c = r3 & 0xff;
 	printstring[printstringpos++] = c;
 	if (c == '\n') {
 	  printstring[printstringpos] = 0;
-	  printf("%s", printstring);
+	  printf("(%d,%d) %s", id, tbUtils->getTime(), printstring);
 	  printstringpos = 0;
 	}
       }
@@ -128,12 +136,20 @@ int main(int argc, char **argv, char **env)
 	trace0.tbUtils = tbUtils;
 	trace0.pc = &top->v->traceport_exec_pc[0];
 	trace0.insn = &top->v->traceport_exec_insn[0];
+	trace0.valid = &top->v->traceport_exec_valid[0];
+	trace0.wb_data = &top->v->traceport_exec_wbdata[0];
+	trace0.wb_reg = &top->v->traceport_exec_wbreg[0];
+	trace0.wb_en = &top->v->traceport_exec_wben[0];
 	trace0.cpu = top->v->mor1kx0->mor1kx_cpu->cappuccino__DOT__mor1kx_cpu;
 	TraceExecMonitor trace1;
 	trace1.id = 1;
 	trace1.tbUtils = tbUtils;
 	trace1.pc = &top->v->traceport_exec_pc[1];
 	trace1.insn = &top->v->traceport_exec_insn[1];
+	trace1.valid = &top->v->traceport_exec_valid[1];
+	trace1.wb_data = &top->v->traceport_exec_wbdata[1];
+	trace1.wb_reg = &top->v->traceport_exec_wbreg[1];
+	trace1.wb_en = &top->v->traceport_exec_wben[1];
 	trace1.cpu = top->v->mor1kx1->mor1kx_cpu->cappuccino__DOT__mor1kx_cpu;
 	
 	done = 0;
