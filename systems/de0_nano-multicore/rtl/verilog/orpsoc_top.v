@@ -244,171 +244,181 @@ wire [31:0] or1k_irq [0:1];
 wire        or1k_clk;
 wire        or1k_rst;
 
+   wire [31:0]  or1k_dbg_dat_i;
+   wire [31:0]  or1k_dbg_adr_i;
+   wire         or1k_dbg_we_i;
+   wire         or1k_dbg_stb_i;
+   wire         or1k_dbg_ack_o;
+   wire [31:0]  or1k_dbg_dat_o;
+   
+   wire         or1k_dbg_stall_i;
+   wire         or1k_dbg_ewt_i;
+   wire [3:0]   or1k_dbg_lss_o;
+   wire [1:0]   or1k_dbg_is_o;
+   wire [10:0]  or1k_dbg_wp_o;
+   wire         or1k_dbg_bp_o;
+   wire         or1k_dbg_rst;
+   
 assign or1k_clk = wb_clk;
 assign or1k_rst = wb_rst | or1k_dbg_rst;
 
 mor1kx #(
-	.FEATURE_DEBUGUNIT              ("ENABLED"),
-	.FEATURE_CMOV                   ("ENABLED"),
-	.FEATURE_INSTRUCTIONCACHE       ("ENABLED"),
-	.FEATURE_MULTICORE              ("ENABLED"),
-	.FEATURE_TRACEPORT_EXEC         ("ENABLED"),
-	.OPTION_ICACHE_BLOCK_WIDTH      (5),
-	.OPTION_ICACHE_SET_WIDTH        (7),
-	.OPTION_ICACHE_WAYS             (1),
-	.OPTION_ICACHE_LIMIT_WIDTH      (32),
-	.FEATURE_IMMU                   ("ENABLED"),
-	.FEATURE_DATACACHE              ("ENABLED"),
-	.OPTION_DCACHE_BLOCK_WIDTH      (5),
-	.OPTION_DCACHE_SET_WIDTH        (7),
-	.OPTION_DCACHE_WAYS             (1),
-	.OPTION_DCACHE_LIMIT_WIDTH      (31),
-	.FEATURE_DMMU                   ("ENABLED"),
+        .FEATURE_DEBUGUNIT              ("ENABLED"),
+        .FEATURE_CMOV                   ("ENABLED"),
+        .FEATURE_INSTRUCTIONCACHE       ("ENABLED"),
+        .FEATURE_MULTICORE              ("ENABLED"),
+        .FEATURE_TRACEPORT_EXEC         ("ENABLED"),
+        .OPTION_ICACHE_BLOCK_WIDTH      (5),
+        .OPTION_ICACHE_SET_WIDTH        (7),
+        .OPTION_ICACHE_WAYS             (1),
+        .OPTION_ICACHE_LIMIT_WIDTH      (32),
+        .FEATURE_IMMU                   ("ENABLED"),
+        .FEATURE_DATACACHE              ("ENABLED"),
+        .OPTION_DCACHE_BLOCK_WIDTH      (5),
+        .OPTION_DCACHE_SET_WIDTH        (7),
+        .OPTION_DCACHE_WAYS             (1),
+        .OPTION_DCACHE_LIMIT_WIDTH      (31),
+        .FEATURE_DMMU                   ("ENABLED"),
 
-	.IBUS_WB_TYPE                   ("B3_REGISTERED_FEEDBACK"),
-	.DBUS_WB_TYPE                   ("B3_REGISTERED_FEEDBACK"),
-	.OPTION_CPU0                    ("CAPPUCCINO"),
-	.OPTION_RESET_PC                (32'h00000100)
+        .IBUS_WB_TYPE                   ("B3_REGISTERED_FEEDBACK"),
+        .DBUS_WB_TYPE                   ("B3_REGISTERED_FEEDBACK"),
+        .OPTION_CPU0                    ("CAPPUCCINO"),
+        .OPTION_RESET_PC                (32'h00000100)
 ) mor1kx0 (
-	.iwbm_adr_o			(wb_m2s_or1k0_i_adr),
-	.iwbm_stb_o			(wb_m2s_or1k0_i_stb),
-	.iwbm_cyc_o			(wb_m2s_or1k0_i_cyc),
-	.iwbm_sel_o			(wb_m2s_or1k0_i_sel),
-	.iwbm_we_o			(wb_m2s_or1k0_i_we),
-	.iwbm_cti_o			(wb_m2s_or1k0_i_cti),
-	.iwbm_bte_o			(wb_m2s_or1k0_i_bte),
-	.iwbm_dat_o			(wb_m2s_or1k0_i_dat),
+        .iwbm_adr_o                     (wb_m2s_or1k0_i_adr),
+        .iwbm_stb_o                     (wb_m2s_or1k0_i_stb),
+        .iwbm_cyc_o                     (wb_m2s_or1k0_i_cyc),
+        .iwbm_sel_o                     (wb_m2s_or1k0_i_sel),
+        .iwbm_we_o                      (wb_m2s_or1k0_i_we),
+        .iwbm_cti_o                     (wb_m2s_or1k0_i_cti),
+        .iwbm_bte_o                     (wb_m2s_or1k0_i_bte),
+        .iwbm_dat_o                     (wb_m2s_or1k0_i_dat),
 
-	.dwbm_adr_o			(wb_m2s_or1k0_d_adr),
-	.dwbm_stb_o			(wb_m2s_or1k0_d_stb),
-	.dwbm_cyc_o			(wb_m2s_or1k0_d_cyc),
-	.dwbm_sel_o			(wb_m2s_or1k0_d_sel),
-	.dwbm_we_o			(wb_m2s_or1k0_d_we ),
-	.dwbm_cti_o			(wb_m2s_or1k0_d_cti),
-	.dwbm_bte_o			(wb_m2s_or1k0_d_bte),
-	.dwbm_dat_o			(wb_m2s_or1k0_d_dat),
+        .dwbm_adr_o                     (wb_m2s_or1k0_d_adr),
+        .dwbm_stb_o                     (wb_m2s_or1k0_d_stb),
+        .dwbm_cyc_o                     (wb_m2s_or1k0_d_cyc),
+        .dwbm_sel_o                     (wb_m2s_or1k0_d_sel),
+        .dwbm_we_o                      (wb_m2s_or1k0_d_we ),
+        .dwbm_cti_o                     (wb_m2s_or1k0_d_cti),
+        .dwbm_bte_o                     (wb_m2s_or1k0_d_bte),
+        .dwbm_dat_o                     (wb_m2s_or1k0_d_dat),
 
-	.clk				(or1k_clk),
-	.rst				(or1k_rst),
+        .clk                            (or1k_clk),
+        .rst                            (or1k_rst),
 
-	.iwbm_err_i			(wb_s2m_or1k0_i_err),
-	.iwbm_ack_i			(wb_s2m_or1k0_i_ack),
-	.iwbm_dat_i			(wb_s2m_or1k0_i_dat),
-	.iwbm_rty_i			(wb_s2m_or1k0_i_rty),
+        .iwbm_err_i                     (wb_s2m_or1k0_i_err),
+        .iwbm_ack_i                     (wb_s2m_or1k0_i_ack),
+        .iwbm_dat_i                     (wb_s2m_or1k0_i_dat),
+        .iwbm_rty_i                     (wb_s2m_or1k0_i_rty),
 
-	.dwbm_err_i			(wb_s2m_or1k0_d_err),
-	.dwbm_ack_i			(wb_s2m_or1k0_d_ack),
-	.dwbm_dat_i			(wb_s2m_or1k0_d_dat),
-	.dwbm_rty_i			(wb_s2m_or1k0_d_rty),
+        .dwbm_err_i                     (wb_s2m_or1k0_d_err),
+        .dwbm_ack_i                     (wb_s2m_or1k0_d_ack),
+        .dwbm_dat_i                     (wb_s2m_or1k0_d_dat),
+        .dwbm_rty_i                     (wb_s2m_or1k0_d_rty),
 
-	.irq_i				(or1k_irq[0]),
+        .irq_i                          (or1k_irq[0]),
 
-	.du_addr_i                      (16'b0),
-	.du_stb_i                       (1'b0),
-	.du_dat_i                       (32'b0),
-	.du_we_i                        (1'b0),
-	.du_dat_o                       (),
-	.du_ack_o                       (),
-	.du_stall_i                     (1'b0),
-	.du_stall_o                     (),
+        .du_addr_i(or1k_dbg_adr_i[15:0]),
+        .du_stb_i(or1k_dbg_stb_i),
+        .du_dat_i(or1k_dbg_dat_i),
+        .du_we_i(or1k_dbg_we_i),
+        .du_dat_o(or1k_dbg_dat_o),
+        .du_ack_o(or1k_dbg_ack_o),
+        .du_stall_i(or1k_dbg_stall_i),
+        .du_stall_o(or1k_dbg_bp_o),
 
-	.multicore_coreid_i             (0),
-	.multicore_numcores_i           (2),
+        .multicore_coreid_i             (0),
+        .multicore_numcores_i           (2),
 
-	.snoop_adr_i             (snoop_adr),
-	.snoop_en_i              (snoop_en),
+        .snoop_adr_i             (snoop_adr),
+        .snoop_en_i              (snoop_en),
 
-	.traceport_exec_valid_o  (traceport_exec_valid[0]),
-	.traceport_exec_pc_o     (traceport_exec_pc[0]),
-	.traceport_exec_insn_o   (traceport_exec_insn[0]),
-	.traceport_exec_wbdata_o (traceport_exec_wbdata[0]),
-	.traceport_exec_wbreg_o  (traceport_exec_wbreg[0]),
-	.traceport_exec_wben_o   (traceport_exec_wben[0])
+        .traceport_exec_valid_o  (traceport_exec_valid[0]),
+        .traceport_exec_pc_o     (traceport_exec_pc[0]),
+        .traceport_exec_insn_o   (traceport_exec_insn[0]),
+        .traceport_exec_wbdata_o (traceport_exec_wbdata[0]),
+        .traceport_exec_wbreg_o  (traceport_exec_wbreg[0]),
+        .traceport_exec_wben_o   (traceport_exec_wben[0])
 );
 
 mor1kx #(
-	.FEATURE_DEBUGUNIT              ("ENABLED"),
-	.FEATURE_CMOV                   ("ENABLED"),
-	.FEATURE_INSTRUCTIONCACHE       ("ENABLED"),
-	.FEATURE_MULTICORE              ("ENABLED"),
-	.FEATURE_TRACEPORT_EXEC         ("ENABLED"),
-	.OPTION_ICACHE_BLOCK_WIDTH      (5),
-	.OPTION_ICACHE_SET_WIDTH        (7),
-	.OPTION_ICACHE_WAYS             (1),
-	.OPTION_ICACHE_LIMIT_WIDTH      (32),
-	.FEATURE_IMMU                   ("ENABLED"),
-	.FEATURE_DATACACHE              ("ENABLED"),
-	.OPTION_DCACHE_BLOCK_WIDTH      (5),
-	.OPTION_DCACHE_SET_WIDTH        (7),
-	.OPTION_DCACHE_WAYS             (1),
-	.OPTION_DCACHE_LIMIT_WIDTH      (31),
-	.FEATURE_DMMU                   ("ENABLED"),
+        .FEATURE_DEBUGUNIT              ("ENABLED"),
+        .FEATURE_CMOV                   ("ENABLED"),
+        .FEATURE_INSTRUCTIONCACHE       ("ENABLED"),
+        .FEATURE_MULTICORE              ("ENABLED"),
+        .FEATURE_TRACEPORT_EXEC         ("ENABLED"),
+        .OPTION_ICACHE_BLOCK_WIDTH      (5),
+        .OPTION_ICACHE_SET_WIDTH        (7),
+        .OPTION_ICACHE_WAYS             (1),
+        .OPTION_ICACHE_LIMIT_WIDTH      (32),
+        .FEATURE_IMMU                   ("ENABLED"),
+        .FEATURE_DATACACHE              ("ENABLED"),
+        .OPTION_DCACHE_BLOCK_WIDTH      (5),
+        .OPTION_DCACHE_SET_WIDTH        (7),
+        .OPTION_DCACHE_WAYS             (1),
+        .OPTION_DCACHE_LIMIT_WIDTH      (31),
+        .FEATURE_DMMU                   ("ENABLED"),
 
-	.IBUS_WB_TYPE                   ("B3_REGISTERED_FEEDBACK"),
-	.DBUS_WB_TYPE                   ("B3_REGISTERED_FEEDBACK"),
-	.OPTION_CPU0                    ("CAPPUCCINO"),
-	.OPTION_RESET_PC                (32'h00000100)
+        .IBUS_WB_TYPE                   ("B3_REGISTERED_FEEDBACK"),
+        .DBUS_WB_TYPE                   ("B3_REGISTERED_FEEDBACK"),
+        .OPTION_CPU0                    ("CAPPUCCINO"),
+        .OPTION_RESET_PC                (32'h00000100)
 ) mor1kx1 (
-	.iwbm_adr_o			(wb_m2s_or1k1_i_adr),
-	.iwbm_stb_o			(wb_m2s_or1k1_i_stb),
-	.iwbm_cyc_o			(wb_m2s_or1k1_i_cyc),
-	.iwbm_sel_o			(wb_m2s_or1k1_i_sel),
-	.iwbm_we_o			(wb_m2s_or1k1_i_we),
-	.iwbm_cti_o			(wb_m2s_or1k1_i_cti),
-	.iwbm_bte_o			(wb_m2s_or1k1_i_bte),
-	.iwbm_dat_o			(wb_m2s_or1k1_i_dat),
+        .iwbm_adr_o                     (wb_m2s_or1k1_i_adr),
+        .iwbm_stb_o                     (wb_m2s_or1k1_i_stb),
+        .iwbm_cyc_o                     (wb_m2s_or1k1_i_cyc),
+        .iwbm_sel_o                     (wb_m2s_or1k1_i_sel),
+        .iwbm_we_o                      (wb_m2s_or1k1_i_we),
+        .iwbm_cti_o                     (wb_m2s_or1k1_i_cti),
+        .iwbm_bte_o                     (wb_m2s_or1k1_i_bte),
+        .iwbm_dat_o                     (wb_m2s_or1k1_i_dat),
 
-	.dwbm_adr_o			(wb_m2s_or1k1_d_adr),
-	.dwbm_stb_o			(wb_m2s_or1k1_d_stb),
-	.dwbm_cyc_o			(wb_m2s_or1k1_d_cyc),
-	.dwbm_sel_o			(wb_m2s_or1k1_d_sel),
-	.dwbm_we_o			(wb_m2s_or1k1_d_we ),
-	.dwbm_cti_o			(wb_m2s_or1k1_d_cti),
-	.dwbm_bte_o			(wb_m2s_or1k1_d_bte),
-	.dwbm_dat_o			(wb_m2s_or1k1_d_dat),
+        .dwbm_adr_o                     (wb_m2s_or1k1_d_adr),
+        .dwbm_stb_o                     (wb_m2s_or1k1_d_stb),
+        .dwbm_cyc_o                     (wb_m2s_or1k1_d_cyc),
+        .dwbm_sel_o                     (wb_m2s_or1k1_d_sel),
+        .dwbm_we_o                      (wb_m2s_or1k1_d_we ),
+        .dwbm_cti_o                     (wb_m2s_or1k1_d_cti),
+        .dwbm_bte_o                     (wb_m2s_or1k1_d_bte),
+        .dwbm_dat_o                     (wb_m2s_or1k1_d_dat),
 
-	.clk				(or1k_clk),
-	.rst				(or1k_rst),
+        .clk                            (or1k_clk),
+        .rst                            (or1k_rst),
 
-	.iwbm_err_i			(wb_s2m_or1k1_i_err),
-	.iwbm_ack_i			(wb_s2m_or1k1_i_ack),
-	.iwbm_dat_i			(wb_s2m_or1k1_i_dat),
-	.iwbm_rty_i			(wb_s2m_or1k1_i_rty),
+        .iwbm_err_i                     (wb_s2m_or1k1_i_err),
+        .iwbm_ack_i                     (wb_s2m_or1k1_i_ack),
+        .iwbm_dat_i                     (wb_s2m_or1k1_i_dat),
+        .iwbm_rty_i                     (wb_s2m_or1k1_i_rty),
 
-	.dwbm_err_i			(wb_s2m_or1k1_d_err),
-	.dwbm_ack_i			(wb_s2m_or1k1_d_ack),
-	.dwbm_dat_i			(wb_s2m_or1k1_d_dat),
-	.dwbm_rty_i			(wb_s2m_or1k1_d_rty),
+        .dwbm_err_i                     (wb_s2m_or1k1_d_err),
+        .dwbm_ack_i                     (wb_s2m_or1k1_d_ack),
+        .dwbm_dat_i                     (wb_s2m_or1k1_d_dat),
+        .dwbm_rty_i                     (wb_s2m_or1k1_d_rty),
 
-	.irq_i				(or1k_irq[1]),
+        .irq_i                          (or1k_irq[1]),
 
-	.du_addr_i                      (16'b0),
-	.du_stb_i                       (1'b0),
-	.du_dat_i                       (32'b0),
-	.du_we_i                        (1'b0),
-	.du_dat_o                       (),
-	.du_ack_o                       (),
-	.du_stall_i                     (1'b0),
-	.du_stall_o                     (),
+        .du_addr_i(or1k_dbg_adr_i[15:0]),
+        .du_stb_i(or1k_dbg_stb_i),
+        .du_dat_i(or1k_dbg_dat_i),
+        .du_we_i(or1k_dbg_we_i),
+        .du_dat_o(),
+        .du_ack_o(),
+        .du_stall_i(or1k_dbg_stall_i),
+        .du_stall_o(),
 
-	.multicore_coreid_i             (1),
-	.multicore_numcores_i           (2),
+        .multicore_coreid_i             (1),
+        .multicore_numcores_i           (2),
 
-	.snoop_adr_i             (snoop_adr),
-	.snoop_en_i              (snoop_en),
+        .snoop_adr_i             (snoop_adr),
+        .snoop_en_i              (snoop_en),
 
-	.traceport_exec_valid_o  (traceport_exec_valid[1]),
-	.traceport_exec_pc_o     (traceport_exec_pc[1]),
-	.traceport_exec_insn_o   (traceport_exec_insn[1]),
-	.traceport_exec_wbdata_o (traceport_exec_wbdata[1]),
-	.traceport_exec_wbreg_o  (traceport_exec_wbreg[1]),
-	.traceport_exec_wben_o   (traceport_exec_wben[1])
+        .traceport_exec_valid_o  (traceport_exec_valid[1]),
+        .traceport_exec_pc_o     (traceport_exec_pc[1]),
+        .traceport_exec_insn_o   (traceport_exec_insn[1]),
+        .traceport_exec_wbdata_o (traceport_exec_wbdata[1]),
+        .traceport_exec_wbreg_o  (traceport_exec_wbreg[1]),
+        .traceport_exec_wben_o   (traceport_exec_wben[1])
 );
-
-// TODOD: connect
-assign or1k_dbg_dat_o = 0;
-assign or1k_dbg_ack_o = 1;
-assign or1k_dbg_bp_o = 0;
 
 ////////////////////////////////////////////////////////////////////////
 //
